@@ -34,12 +34,23 @@ void leds_all_on(void) {
 }
 
 void third_mode(void){
-  analogWrite(mass_leds[2], 255);
-  analogWrite(mass_leds[1], 255);
-  analogWrite(mass_leds[2], 0);
+  unsigned long currentMillis = millis();
+  if (currentMillis - previousMillis >= interval) {
+    previousMillis = currentMillis;
+    analogWrite(mass_leds[0], 255);
+  	analogWrite(mass_leds[4], 255);
+  	analogWrite(mass_leds[2], 255);
+  	analogWrite(mass_leds[1], 255);
+  	analogWrite(mass_leds[3], 255);
+  }else{
+    analogWrite(mass_leds[0], 0);
+    analogWrite(mass_leds[4], 0);
+    analogWrite(mass_leds[2], 0);
+  }
+}
+void fourth_mode(void){
+unsigned long currentMillis = millis();
   analogWrite(mass_leds[0], 255);
-  analogWrite(mass_leds[1], 0);
-  analogWrite(mass_leds[0], 0);
 }
 void setup() {
   // Инициализация пинов светодиодов
@@ -75,37 +86,9 @@ void loop() {
   }else if(currentMode == 2){
     leds_all_on();
   }else if(currentMode == 3){
-  	analogWrite(mass_leds[0], 255);
-    millis();
-  	analogWrite(mass_leds[4], 255);
-    millis();
-  	analogWrite(mass_leds[2], 255);
-    millis();
-  	analogWrite(mass_leds[1], 255);
-    millis();
-  	analogWrite(mass_leds[3], 255);
-    millis();
-  	analogWrite(mass_leds[0], 0);
-    millis();
-    analogWrite(mass_leds[4], 0);
-    millis();
-    analogWrite(mass_leds[2], 0);
-    millis();
+	third_mode();
   }else if(currentMode == 4){
-  	analogWrite(mass_leds[0], 255);
-    analogWrite(mass_leds[4], 255);
-    millis();
-    analogWrite(mass_leds[1], 255);
-    analogWrite(mass_leds[3], 255);
-    millis();
-    analogWrite(mass_leds[2], 255);
-    millis();
-    analogWrite(mass_leds[0], 0);
-    analogWrite(mass_leds[1], 0);
-    analogWrite(mass_leds[2], 0);
-    analogWrite(mass_leds[3], 0);
-    analogWrite(mass_leds[4], 0);
-    millis();
+  	fourth_mode();
   }
   else if (currentMode == 5) {
     currentMode = 1;
