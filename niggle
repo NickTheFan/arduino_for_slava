@@ -1,0 +1,115 @@
+const int mass_leds[5] = {3, 5, 9, 10, 11};
+const int but1 = 6;
+int currentMode = 0; // 0 - get_pwd_leds, 1 - leds_all_on
+unsigned long previousMillis = 0;
+const long interval = 100; // Интервал в миллисекундах для обновления яркости
+
+void get_pwd_leds(void) {
+  static int brightness = 0;
+  static int fadeAmount = 10;
+
+  unsigned long currentMillis = millis();
+  if (currentMillis - previousMillis >= interval) {
+    previousMillis = currentMillis;
+
+    brightness += fadeAmount;
+    if (brightness <= 0 || brightness >= 255) {
+      fadeAmount = -fadeAmount;
+    }
+
+    
+    analogWrite(mass_leds[0], brightness);
+    analogWrite(mass_leds[1], brightness);
+    analogWrite(mass_leds[2], brightness);
+    analogWrite(mass_leds[3], brightness);
+    analogWrite(mass_leds[4], brightness);
+   
+  }
+}
+
+void leds_all_on(void) {
+  for (int i = 0; i < 5; i++) {
+    analogWrite(mass_leds[i], 255);
+  }
+}
+
+void third_mode(void){
+  analogWrite(mass_leds[2], 255);
+  analogWrite(mass_leds[1], 255);
+  analogWrite(mass_leds[2], 0);
+  analogWrite(mass_leds[0], 255);
+  analogWrite(mass_leds[1], 0);
+  analogWrite(mass_leds[0], 0);
+}
+void setup() {
+  // Инициализация пинов светодиодов
+ //for (int i = 0; i < 5; i++) {
+    //pinMode(mass_leds[i], OUTPUT);
+  //}
+  // Инициализация пина кнопки
+  pinMode(mass_leds[0], OUTPUT);
+  pinMode(mass_leds[1], OUTPUT);
+  pinMode(mass_leds[2], OUTPUT);
+  pinMode(mass_leds[3], OUTPUT);
+  pinMode(mass_leds[4], OUTPUT);
+  pinMode(but1, INPUT);
+  Serial.begin(9600);
+
+}
+
+void loop() {
+  static int lastButtonState = LOW;
+  int buttonState = digitalRead(but1);
+  Serial.println(currentMode);
+
+  // Проверка на изменение состояния кнопки
+  if (buttonState == HIGH && lastButtonState == LOW) {
+    // Переключение режима
+    currentMode = currentMode + 1;
+    delay(200); // Задержка для предотвращения дребезга
+  }
+
+  // Выполнение действия в зависимости от текущего режима
+  if (currentMode == 1) {
+    get_pwd_leds();
+  }else if(currentMode == 2){
+    leds_all_on();
+  }else if(currentMode == 3){
+  	analogWrite(mass_leds[0], 255);
+    millis();
+  	analogWrite(mass_leds[4], 255);
+    millis();
+  	analogWrite(mass_leds[2], 255);
+    millis();
+  	analogWrite(mass_leds[1], 255);
+    millis();
+  	analogWrite(mass_leds[3], 255);
+    millis();
+  	analogWrite(mass_leds[0], 0);
+    millis();
+    analogWrite(mass_leds[4], 0);
+    millis();
+    analogWrite(mass_leds[2], 0);
+    millis();
+  }else if(currentMode == 4){
+  	analogWrite(mass_leds[0], 255);
+    analogWrite(mass_leds[4], 255);
+    millis();
+    analogWrite(mass_leds[1], 255);
+    analogWrite(mass_leds[3], 255);
+    millis();
+    analogWrite(mass_leds[2], 255);
+    millis();
+    analogWrite(mass_leds[0], 0);
+    analogWrite(mass_leds[1], 0);
+    analogWrite(mass_leds[2], 0);
+    analogWrite(mass_leds[3], 0);
+    analogWrite(mass_leds[4], 0);
+    millis();
+  }
+  else if (currentMode == 5) {
+    currentMode = 1;
+  }
+
+  lastButtonState = buttonState;
+}
