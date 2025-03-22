@@ -1,0 +1,52 @@
+#include <Adafruit_SSD1331.h>
+#include <Adafruit_GFX.h>
+#include <SPI.h>
+
+// Определение пинов
+#define CS   10
+#define DC   9
+#define RST  8
+
+// Настройки дисплея
+#define SCREEN_WIDTH  96
+#define SCREEN_HEIGHT 64
+
+// Инициализация дисплея
+Adafruit_SSD1331 display = Adafruit_SSD1331(CS, DC, RST);
+
+// Определение цветов вручную (если они отсутствуют в библиотеке)
+#define SSD1331_BLACK   0x0000
+#define SSD1331_WHITE   0xFFFF
+#define SSD1331_BLUE    0x001F
+#define SSD1331_RED     0xF800
+
+void setup() {
+  Serial.begin(9600);
+  display.begin();
+
+  // Очистка экрана
+  display.fillScreen(SSD1331_BLACK);
+  delay(500);
+
+  // Вывод текста
+  display.setTextColor(SSD1331_WHITE);
+  display.setTextSize(1);
+  display.setCursor(0, 0);
+  display.println("Hello World!");
+  
+  // Рисование фигур
+  display.drawRect(0, 15, 50, 20, SSD1331_BLUE);
+  display.fillCircle(70, 25, 10, SSD1331_RED);
+  
+  delay(2000);
+}
+
+void loop() {
+  // Анимация плавной смены цвета
+  for (int i = 0; i < 255; i++) {
+    display.fillScreen(display.color565(i, 0, 255 - i)); // Используем color565 (с маленькой буквы)
+    delay(10);
+  }
+  for (int i = 0; i < 255; i++) {
+    display.fillScreen(display.color565(255 - i, i, 0)); // Используем color565 (с маленькой буквы)
+    delay(10);
