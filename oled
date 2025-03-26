@@ -50,3 +50,15 @@ void loop() {
   for (int i = 0; i < 255; i++) {
     display.fillScreen(display.color565(255 - i, i, 0)); // Используем color565 (с маленькой буквы)
     delay(10);
+
+
+
+
+//OLED → Arduino
+//VCC  → 3.3V
+//GND  → GND
+//DIN  → 11 (MOSI)
+//CLK  → 13 (SCK)
+//CS   → 10
+//D/C  → 9
+//RES  → 8
